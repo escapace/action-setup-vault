@@ -1,5 +1,5 @@
-import * as core from '@actions/core'
-import * as tc from '@actions/tool-cache'
+import { debug, getInput, addPath, setFailed } from '@actions/core'
+import { downloadTool, find, extractZip } from '@actions/tool-cache'
 import { getRelease } from './vendor'
 import { isError, isString, isEmpty } from 'lodash-es'
 import os from 'os'
@@ -22,17 +22,17 @@ async function download(
   url: string,
   verify: (zipFile: string) => Promise<void>
 ) {
-  core.debug(`Downloading Vault from ${url}`)
+  debug(`Downloading Vault from ${url}`)
 
-  const pathToZip = await tc.downloadTool(url)
+  const zip = await downloadTool(url)
 
-  await verify(pathToZip)
+  await verify(zip)
 
-  const pathToFile = await tc.extractZip(pathToZip)
+  const pathToFile = await extractZip(zip)
 
-  core.debug(`Vault path is ${pathToFile}.`)
+  debug(`Vault path is ${pathToFile}.`)
 
-  if (!isString(pathToZip) || !isString(pathToFile)) {
+  if (!isString(zip) || !isString(pathToFile)) {
     throw new Error(`Unable to download Vault from ${url}`)
   }
 
@@ -41,15 +41,15 @@ async function download(
 
 export async function run() {
   try {
-    const version = core.getInput('vault-version')
+    const version = getInput('vault-version')
     const platform = mapOS(os.platform())
     const arch = mapArch(os.arch())
 
-    core.debug(`Finding releases for Vault version ${version}`)
+    debug(`Finding releases for Vault version ${version}`)
 
     const release = await getRelease('vault', version, USER_AGENT)
 
-    core.debug(
+    debug(
       `Getting build for Vault version ${release.version}: ${platform} ${arch}`
     )
 
@@ -62,7 +62,7 @@ export async function run() {
       )
     }
 
-    let toolPath = tc.find('vault', release.version, arch)
+    let toolPath = find('vault', release.version, arch)
 
     if (!isString(toolPath) || isEmpty(toolPath)) {
       toolPath = await download(
@@ -71,15 +71,15 @@ export async function run() {
       )
     }
 
-    core.addPath(toolPath)
+    addPath(toolPath)
   } catch (error) {
     if (isError(error)) {
-      core.setFailed(error.message)
+      setFailed(error.message)
     } else if (isString(error)) {
-      core.setFailed(error)
+      setFailed(error)
     }
 
-    core.setFailed('Unknown Error')
+    setFailed('Unknown Error')
   }
 }
 
