@@ -23,6 +23,7 @@ jobs:
         version:
           - ~1.9.0
           - ^1.10.4
+          - latest
     steps:
       - name: checkout
         uses: actions/checkout@v3

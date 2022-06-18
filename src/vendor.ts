@@ -29,9 +29,9 @@ export async function getRelease(
 
   if (range == null) {
     // pick the latest release (prereleases will be skipped for safety, set an explicit version instead)
-    const releaseVersions = Object.keys(versions).filter(
-      (v) => semver.prerelease(v) == null
-    )
+    const releaseVersions = Object.keys(versions)
+      .filter((v) => semver.valid(v) !== null)
+      .filter((v) => semver.prerelease(v) == null)
 
     version = releaseVersions.sort((a, b) => semver.rcompare(a, b))[0]
 
