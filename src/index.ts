@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
-import { getRelease } from '@hashicorp/js-releases'
+import { getRelease } from './vendor'
 import { isError, isString, isEmpty } from 'lodash-es'
 import os from 'os'
 
