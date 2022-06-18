@@ -22,7 +22,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         version:
           - ~1.9.0
-          - ^1.11.0
+          - ^1.10.4
     steps:
       - name: checkout
         uses: actions/checkout@v3
