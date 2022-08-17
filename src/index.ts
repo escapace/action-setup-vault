@@ -1,6 +1,6 @@
 import { debug, getInput, addPath, setFailed } from '@actions/core'
 import { downloadTool, find, extractZip } from '@actions/tool-cache'
-import { getRelease } from './vendor'
+import { getRelease } from '@hashicorp/js-releases'
 import { isError, isString, isEmpty } from 'lodash-es'
 import os from 'os'
 
