@@ -1,12 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-pnpm exec syncpack fix-mismatches \
-  --types dev,prod,peer,engines || exit 1
-
-pnpm exec syncpack set-semver-ranges \
-  --types dev,prod,peer,engines || exit 1
-
+pnpm exec syncpack fix-mismatches || exit 1
+pnpm exec syncpack set-semver-ranges || exit 1
 pnpm exec syncpack format || exit 1
 
 pnpm install
@@ -14,7 +10,7 @@ pnpm install
 pnpm exec ls-lint || exit 1
 pnpm exec lint-staged || exit 1
 pnpm run typecheck || exit 1
-pnpm run build || exit 1
+pnpm run build || exit
 
 git add \
   package.json \
