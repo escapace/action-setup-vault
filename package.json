@@ -1,12 +1,12 @@
 {
-  "name": "@escapace/setup-vault",
+  "name": "@escapace/action-setup-vault",
   "description": "",
   "version": "0.0.0",
   "author": {
     "name": "escapace",
     "email": "opensource@escapace.com"
   },
-  "bugs": "https://github.com/escapace/setup-vault/issues",
+  "bugs": "https://github.com/escapace/action-setup-vault/issues",
   "devDependencies": {
     "@actions/core": "1.10.1",
     "@actions/tool-cache": "2.0.1",
@@ -57,14 +57,14 @@
     "lib/cjs",
     "lib/types"
   ],
-  "homepage": "https://github.com/escapace/setup-vault",
+  "homepage": "https://github.com/escapace/action-setup-vault",
   "license": "MPL-2.0",
   "main": "lib/cjs/index.mjs",
   "private": true,
   "publishConfig": {
     "access": "public"
   },
-  "repository": "escapace/setup-vault.git",
+  "repository": "escapace/action-setup-vault",
   "scripts": {
     "build": "node ./scripts/build.mjs",
     "lint": "ls-lint && eslint 'src/**/*.ts'",

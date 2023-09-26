@@ -1,4 +1,4 @@
-## setup-vault
+## action-setup-vault
 
 Sets up HashiCorp Vault.
 
@@ -14,7 +14,7 @@ latest version of Vault. Defaults to `latest`.
 ### Example usage
 
 ```yaml
-uses: escapace/setup-vault@v0.1.1
+uses: escapace/action-setup-vault@v0.1.1
 with:
   vault-version: ~1.10.4
 ```
