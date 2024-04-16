@@ -1,20 +1,20 @@
-import { debug, getInput, addPath, setFailed } from '@actions/core'
-import { downloadTool, find, extractZip } from '@actions/tool-cache'
+import { addPath, debug, getInput, setFailed } from '@actions/core'
+import { downloadTool, extractZip, find } from '@actions/tool-cache'
 import { getRelease } from '@hashicorp/js-releases'
-import { isError, isString, isEmpty } from 'lodash-es'
-import os from 'os'
+import { isEmpty, isError, isString } from 'lodash-es'
+import os from 'node:os'
 
 const mapArch = (arch: string): string =>
   ({
-    x32: '386',
     arm64: 'arm64',
+    x32: '386',
     x64: 'amd64'
-  }[arch] ?? arch)
+  })[arch] ?? arch
 
 const mapOS = (os: string): string =>
   ({
     win32: 'windows'
-  }[os] ?? os)
+  })[os] ?? os
 
 const USER_AGENT = 'escapace/setup-vault'
 
