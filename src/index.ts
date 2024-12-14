@@ -8,20 +8,17 @@ const mapArch = (arch: string): string =>
   ({
     arm64: 'arm64',
     x32: '386',
-    x64: 'amd64'
+    x64: 'amd64',
   })[arch] ?? arch
 
 const mapOS = (os: string): string =>
   ({
-    win32: 'windows'
+    win32: 'windows',
   })[os] ?? os
 
 const USER_AGENT = 'escapace/setup-vault'
 
-async function download(
-  url: string,
-  verify: (zipFile: string) => Promise<void>
-) {
+async function download(url: string, verify: (zipFile: string) => Promise<void>) {
   debug(`Downloading Vault from ${url}`)
 
   const zip = await downloadTool(url)
@@ -49,17 +46,13 @@ export async function run() {
 
     const release = await getRelease('vault', version, USER_AGENT)
 
-    debug(
-      `Getting build for Vault version ${release.version}: ${platform} ${arch}`
-    )
+    debug(`Getting build for Vault version ${release.version}: ${platform} ${arch}`)
 
     const build = release.getBuild(platform, arch)
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    // eslint-disable-next-line typescript/strict-boolean-expressions
     if (!build) {
-      throw new Error(
-        `Vault version ${version} not available for ${platform} and ${arch}`
-      )
+      throw new Error(`Vault version ${version} not available for ${platform} and ${arch}`)
     }
 
     let toolPath = find('vault', release.version, arch)
@@ -67,7 +60,7 @@ export async function run() {
     if (!isString(toolPath) || isEmpty(toolPath)) {
       toolPath = await download(
         build.url,
-        async (zipFile: string) => await release.verify(zipFile, build.filename)
+        async (zipFile: string) => await release.verify(zipFile, build.filename),
       )
     }
 
