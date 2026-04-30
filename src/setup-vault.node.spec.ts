@@ -159,7 +159,9 @@ describe('setupVault', () => {
       >()
     const downloadTool = vi.fn<(url: string) => Promise<string>>()
     const extractZip = vi.fn<(zipFile: string) => Promise<string>>()
-    const findTool = vi.fn(() => '/opt/hostedtoolcache/escapace-vault/1.21.5/amd64')
+    const findTool = vi.fn(
+      () => '/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64',
+    )
     const restoreActionsCache =
       vi.fn<(paths: string[], key: string) => Promise<string | undefined>>()
     const saveActionsCache = vi.fn<(paths: string[], key: string) => Promise<number>>()
@@ -183,10 +185,14 @@ describe('setupVault', () => {
         getRelease: async () => await Promise.resolve(release),
         removePath: async () => await Promise.resolve(),
       }),
-    ).resolves.toBe('/opt/hostedtoolcache/escapace-vault/1.21.5/amd64')
+    ).resolves.toBe('/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64')
 
     expect(release.getBuild).toHaveBeenCalledWith('linux', 'amd64')
-    expect(findTool).toHaveBeenCalledWith('escapace-vault', '1.21.5', 'amd64')
+    expect(findTool).toHaveBeenCalledWith(
+      'action-setup-vault-tool-cache-community',
+      '1.21.5',
+      'amd64',
+    )
     expect(restoreActionsCache).not.toHaveBeenCalled()
     expect(saveActionsCache).not.toHaveBeenCalled()
     expect(cacheTool).not.toHaveBeenCalled()
@@ -211,7 +217,9 @@ describe('setupVault', () => {
     const findTool = vi
       .fn<(...parameters: [string, string, string]) => string>()
       .mockReturnValueOnce('')
-      .mockReturnValueOnce('/opt/hostedtoolcache/escapace-vault/1.21.5/amd64')
+      .mockReturnValueOnce(
+        '/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64',
+      )
     const removePath = vi.fn(async () => await Promise.resolve())
     const restoreActionsCache = vi.fn(async () => await Promise.resolve('vault-cache-key'))
     const saveActionsCache = vi.fn<(paths: string[], key: string) => Promise<number>>()
@@ -235,18 +243,20 @@ describe('setupVault', () => {
         actionsCacheFeatureAvailable: () => true,
         getRelease: async () => await Promise.resolve(release),
       }),
-    ).resolves.toBe('/opt/hostedtoolcache/escapace-vault/1.21.5/amd64')
+    ).resolves.toBe('/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64')
 
-    expect(removePath).toHaveBeenCalledWith('/opt/hostedtoolcache/escapace-vault/1.21.5/amd64')
     expect(removePath).toHaveBeenCalledWith(
-      '/opt/hostedtoolcache/escapace-vault/1.21.5/amd64.complete',
+      '/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64',
+    )
+    expect(removePath).toHaveBeenCalledWith(
+      '/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64.complete',
     )
     expect(restoreActionsCache).toHaveBeenCalledWith(
       [
-        '/opt/hostedtoolcache/escapace-vault/1.21.5/amd64',
-        '/opt/hostedtoolcache/escapace-vault/1.21.5/amd64.complete',
+        '/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64',
+        '/opt/hostedtoolcache/action-setup-vault-tool-cache-community/1.21.5/amd64.complete',
       ],
-      'action-setup-vault-tool-cache-escapace-vault-1.21.5-linux-amd64',
+      'action-setup-vault-tool-cache-community-1.21.5-linux-amd64',
     )
     expect(downloadTool).not.toHaveBeenCalled()
     expect(cacheTool).not.toHaveBeenCalled()
@@ -261,7 +271,9 @@ describe('setupVault', () => {
     const release = createRelease('1.21.5+ent', build)
     const cacheTool = vi.fn(
       async () =>
-        await Promise.resolve('/opt/hostedtoolcache/escapace-vault-enterprise/1.21.5/amd64'),
+        await Promise.resolve(
+          '/opt/hostedtoolcache/action-setup-vault-tool-cache-enterprise/1.21.5/amd64',
+        ),
     )
     const downloadTool = vi.fn(async () => {
       await Promise.resolve()
@@ -296,25 +308,29 @@ describe('setupVault', () => {
         getRelease: async () => await Promise.resolve(release),
         removePath: async () => await Promise.resolve(),
       }),
-    ).resolves.toBe('/opt/hostedtoolcache/escapace-vault-enterprise/1.21.5/amd64')
+    ).resolves.toBe('/opt/hostedtoolcache/action-setup-vault-tool-cache-enterprise/1.21.5/amd64')
 
     expect(release.getBuild).toHaveBeenCalledWith('windows', 'amd64')
-    expect(findTool).toHaveBeenCalledWith('escapace-vault-enterprise', '1.21.5+ent', 'amd64')
+    expect(findTool).toHaveBeenCalledWith(
+      'action-setup-vault-tool-cache-enterprise',
+      '1.21.5+ent',
+      'amd64',
+    )
     expect(downloadTool).toHaveBeenCalledWith(build.url)
     expect(release.verify).toHaveBeenCalledWith('/tmp/vault.zip', build.filename)
     expect(extractZip).toHaveBeenCalledWith('/tmp/vault.zip')
     expect(cacheTool).toHaveBeenCalledWith(
       '/tmp/vault',
-      'escapace-vault-enterprise',
+      'action-setup-vault-tool-cache-enterprise',
       '1.21.5+ent',
       'amd64',
     )
     expect(saveActionsCache).toHaveBeenCalledWith(
       [
-        '/opt/hostedtoolcache/escapace-vault-enterprise/1.21.5/amd64',
-        '/opt/hostedtoolcache/escapace-vault-enterprise/1.21.5/amd64.complete',
+        '/opt/hostedtoolcache/action-setup-vault-tool-cache-enterprise/1.21.5/amd64',
+        '/opt/hostedtoolcache/action-setup-vault-tool-cache-enterprise/1.21.5/amd64.complete',
       ],
-      'action-setup-vault-tool-cache-escapace-vault-enterprise-1.21.5-windows-amd64',
+      'action-setup-vault-tool-cache-enterprise-1.21.5-windows-amd64',
     )
   })
 })
