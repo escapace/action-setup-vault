@@ -141,6 +141,15 @@ describe('setupVault', () => {
       verify,
       version: '1.21.5',
     }
+    const cacheTool =
+      vi.fn<
+        (
+          sourceDirectory: string,
+          toolName: string,
+          version: string,
+          arch: string,
+        ) => Promise<string>
+      >()
     const downloadTool = vi.fn<(url: string) => Promise<string>>()
     const extractZip = vi.fn<(zipFile: string) => Promise<string>>()
     const findTool = vi.fn(() => '/opt/hostedtoolcache/vault/1.21.5/amd64')
@@ -153,6 +162,7 @@ describe('setupVault', () => {
     await expect(
       setupVault({
         arch: 'x64',
+        cacheTool,
         downloadTool,
         enterprise: false,
         extractZip,
@@ -167,12 +177,13 @@ describe('setupVault', () => {
     expect(getRelease).toHaveBeenCalledWith('^1.21.0', false, 'test-agent')
     expect(getBuild).toHaveBeenCalledWith('linux', 'amd64')
     expect(findTool).toHaveBeenCalledWith('vault', '1.21.5', 'amd64')
+    expect(cacheTool).not.toHaveBeenCalled()
     expect(downloadTool).not.toHaveBeenCalled()
     expect(extractZip).not.toHaveBeenCalled()
     expect(verify).not.toHaveBeenCalled()
   })
 
-  it('downloads, verifies, and extracts Vault when no cached tool path exists', async () => {
+  it('downloads, verifies, extracts, and caches Vault when no cached tool path exists', async () => {
     const build = {
       filename: 'vault_1.21.5+ent_windows_amd64.zip',
       url: 'https://releases.hashicorp.com/vault/1.21.5+ent/vault_1.21.5+ent_windows_amd64.zip',
@@ -186,6 +197,9 @@ describe('setupVault', () => {
       verify,
       version: '1.21.5+ent',
     }
+    const cacheTool = vi.fn(
+      async () => await Promise.resolve('/opt/hostedtoolcache/vault-enterprise/1.21.5/amd64'),
+    )
     const downloadTool = vi.fn(async () => {
       await Promise.resolve()
 
@@ -201,6 +215,7 @@ describe('setupVault', () => {
     await expect(
       setupVault({
         arch: 'x64',
+        cacheTool,
         downloadTool,
         enterprise: true,
         extractZip,
@@ -214,11 +229,13 @@ describe('setupVault', () => {
           return release
         },
       }),
-    ).resolves.toBe('/tmp/vault')
+    ).resolves.toBe('/opt/hostedtoolcache/vault-enterprise/1.21.5/amd64')
 
     expect(getBuild).toHaveBeenCalledWith('windows', 'amd64')
+    expect(findTool).toHaveBeenCalledWith('vault-enterprise', '1.21.5+ent', 'amd64')
     expect(downloadTool).toHaveBeenCalledWith(build.url)
     expect(verify).toHaveBeenCalledWith('/tmp/vault.zip', build.filename)
     expect(extractZip).toHaveBeenCalledWith('/tmp/vault.zip')
+    expect(cacheTool).toHaveBeenCalledWith('/tmp/vault', 'vault-enterprise', '1.21.5+ent', 'amd64')
   })
 })
