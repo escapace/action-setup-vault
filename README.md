@@ -1,20 +1,32 @@
 ## action-setup-vault
 
-Sets up HashiCorp Vault.
+Install the HashiCorp Vault CLI in GitHub Actions and add the selected community or Enterprise binary to `PATH`.
+
+When a matching version was installed by this action before, the cached installation is reused.
+
+```yaml
+uses: escapace/action-setup-vault@v1.0.0
+with:
+  vault-version: ~1.10.4
+```
 
 ### Inputs
 
 #### `vault-version`
 
-**Optional** The version of Vault to install. Instead of full version string you
-can also specify a semantic version range (for example `^1.10.4`) to install the
-latest version satisfying the constraint. A value of `latest` will install the
-latest version of Vault. Defaults to `latest`.
+Version or semantic version range to install. Use `latest` for the latest community release, or for the latest Enterprise release when `enterprise` is `true`.
 
-### Example usage
+Default: `latest`
+
+#### `enterprise`
+
+Install a Vault Enterprise release instead of a community release.
+
+Default: `false`
 
 ```yaml
-uses: escapace/action-setup-vault@v0.1.1
+uses: escapace/action-setup-vault@v1.0.0
 with:
-  vault-version: ~1.10.4
+  enterprise: true
+  vault-version: ^1.21.0
 ```

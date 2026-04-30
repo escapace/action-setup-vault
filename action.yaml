@@ -11,6 +11,10 @@ runs:
   using: 'node24'
 
 inputs:
+  enterprise:
+    default: 'false'
+    description: 'Whether to install Vault Enterprise instead of community releases. Defaults to `false`.'
+    required: false
   vault-version:
     default: 'latest'
     description: 'The version of Vault to install. Instead of full version string you can also specify a semantic version range (for example `^1.10.4`) to install the latest version satisfying the constraint. A value of `latest` will install the latest version of Vault. Defaults to `latest`.'
