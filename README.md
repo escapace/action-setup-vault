@@ -24,6 +24,12 @@ Install a Vault Enterprise release instead of a community release.
 
 Default: `false`
 
+#### `cache`
+
+Persist installed Vault versions with the GitHub Actions cache.
+
+Default: `true`
+
 ```yaml
 uses: escapace/action-setup-vault@v1.0.0
 with:

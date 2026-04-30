@@ -11,6 +11,10 @@ runs:
   using: 'node24'
 
 inputs:
+  cache:
+    default: 'true'
+    description: 'Whether to persist installed Vault versions with the GitHub Actions cache service. Defaults to `true`.'
+    required: false
   enterprise:
     default: 'false'
     description: 'Whether to install Vault Enterprise instead of community releases. Defaults to `false`.'
